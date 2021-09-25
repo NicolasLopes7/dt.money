@@ -1,18 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { TransactionsContext } from '../../contexts/TransactionsContext';
 import { Container } from './styles';
-import api from '../../services/api';
-
-interface Transaction {
-  title: string;
-  type: 'deposit' | 'withdrawl';
-  value: number;
-  category: string;
-  createdAt: string;
-}
 
 export function TransactionsTable() {
-  const [transactions, setTransactions] = useState([] as Transaction[]);
-
+  const transactions = useContext(TransactionsContext);
   const { timeZoneName } = Intl.DateTimeFormat().resolvedOptions();
   const currencyFormatter = new Intl.NumberFormat(timeZoneName, {
     style: 'currency',
@@ -20,18 +11,6 @@ export function TransactionsTable() {
   });
 
   const dateFormatter = new Intl.DateTimeFormat('pt-BR');
-
-  const fetchTransactions = async () => {
-    const {
-      data: { transactions },
-    } = await api.get('/transactions');
-
-    setTransactions(transactions);
-  };
-
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
 
   return (
     <Container>
